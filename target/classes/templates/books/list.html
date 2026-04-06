@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý sách</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${currentUser})}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Quản lý sách</h1>
+            <p class="page-subtitle">Tìm kiếm, cập nhật và theo dõi tồn kho đầu sách trong thư viện.</p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 16px;">
+        <form method="get" action="/books" class="form-grid cols-4">
+            <div style="grid-column: span 2;">
+                <label for="q">Từ khóa</label>
+                <input id="q" name="q" th:value="${q}" placeholder="Tìm theo tên sách, tác giả, thể loại">
+            </div>
+            <div class="actions" style="align-self: end;">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a class="btn btn-secondary" href="/books">Làm mới</a>
+            </div>
+            <div class="actions" style="justify-content: flex-end; align-self: end;" th:if="${currentUser.role.name() == 'ADMIN'}">
+                <a class="btn btn-primary" href="/books/new">Thêm sách</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-wrap card" style="padding: 0;">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Tên sách</th>
+                <th>Tác giả</th>
+                <th>NXB</th>
+                <th>Thể loại</th>
+                <th>Tổng</th>
+                <th>Còn</th>
+                <th th:if="${currentUser.role.name() == 'ADMIN'}">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${books}">
+                <td th:text="${b.bookCode}"></td>
+                <td th:text="${b.title}"></td>
+                <td th:text="${b.author}"></td>
+                <td th:text="${b.publisher}"></td>
+                <td th:text="${b.category}"></td>
+                <td th:text="${b.totalCopies}"></td>
+                <td th:text="${b.availableCopies}"></td>
+                <td th:if="${currentUser.role.name() == 'ADMIN'}">
+                    <div class="actions">
+                        <a class="btn btn-secondary" th:href="@{'/books/edit/' + ${b.id}}">Sửa</a>
+                        <form class="inline" th:action="@{'/books/delete/' + ${b.id}}" method="post">
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(books)}">
+                <td colspan="8" class="empty">Không có sách phù hợp.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

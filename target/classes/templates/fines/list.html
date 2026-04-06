@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý tiền phạt</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${session.currentUser})}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Quản lý tiền phạt</h1>
+            <p class="page-subtitle">Theo dõi các khoản phạt do trả sách quá hạn.</p>
+        </div>
+    </div>
+
+    <div class="table-wrap card" style="padding: 0;">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Thành viên</th>
+                <th>Sách</th>
+                <th>Số ngày trễ</th>
+                <th>Số tiền</th>
+                <th>Ngày phạt</th>
+                <th>Thanh toán</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="f:${fines}">
+                <td th:text="${f.id}"></td>
+                <td th:text="${f.borrowRecord.member.fullName}"></td>
+                <td th:text="${f.borrowRecord.book.title}"></td>
+                <td th:text="${f.overdueDays}"></td>
+                <td th:text="${f.amount}"></td>
+                <td th:text="${f.fineDate}"></td>
+                <td>
+                    <span class="badge" th:classappend="${f.paid ? 'badge-paid' : 'badge-overdue'}" th:text="${f.paid ? 'Đã thanh toán' : 'Chưa thanh toán'}"></span>
+                </td>
+                <td>
+                    <form class="inline" th:if="${!f.paid}" th:action="@{'/fines/pay/' + ${f.id}}" method="post">
+                        <button type="submit" class="btn btn-success">Đánh dấu đã trả</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(fines)}">
+                <td colspan="8" class="empty">Chưa có khoản phạt nào.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

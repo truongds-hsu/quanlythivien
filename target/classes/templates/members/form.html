@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thông tin tài khoản</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${session.currentUser})}"></div>
+    <div class="card" style="max-width: 920px; margin: 0 auto;">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${member.id == null ? 'Thêm tài khoản mới' : 'Cập nhật tài khoản'}"></h1>
+                <p class="page-subtitle">Quản lý thông tin đăng nhập, quyền và trạng thái thành viên.</p>
+            </div>
+        </div>
+        <form method="post" action="/members" th:object="${member}" class="form-grid cols-2">
+            <input type="hidden" th:field="*{id}">
+            <div>
+                <label>Mã thành viên</label>
+                <input th:field="*{memberCode}" required>
+            </div>
+            <div>
+                <label>Họ tên</label>
+                <input th:field="*{fullName}" required>
+            </div>
+            <div>
+                <label>Username</label>
+                <input th:field="*{username}" required>
+            </div>
+            <div>
+                <label>Mật khẩu</label>
+                <input th:field="*{password}" required>
+            </div>
+            <div>
+                <label>Số điện thoại</label>
+                <input th:field="*{phone}">
+            </div>
+            <div>
+                <label>Email</label>
+                <input th:field="*{email}">
+            </div>
+            <div>
+                <label>Ngày tham gia</label>
+                <input type="date" th:field="*{joinDate}">
+            </div>
+            <div>
+                <label>Vai trò</label>
+                <select th:field="*{role}">
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label><input type="checkbox" th:field="*{active}" style="width:auto; margin-right: 8px;"> Tài khoản hoạt động</label>
+            </div>
+            <div class="form-actions" style="grid-column: 1 / -1;">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a href="/members" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

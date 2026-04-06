@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mượn / Trả sách</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${currentUser})}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Mượn / Trả sách</h1>
+            <p class="page-subtitle">Tạo phiếu mượn mới và cập nhật trạng thái trả sách.</p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 16px;">
+        <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+        <form method="post" action="/borrow/new" class="form-grid cols-4">
+            <div th:if="${currentUser.role.name() == 'ADMIN'}">
+                <label>Thành viên</label>
+                <select name="memberId">
+                    <option th:each="m:${members}" th:value="${m.id}" th:text="${m.fullName}"></option>
+                </select>
+            </div>
+            <div>
+                <label>Sách</label>
+                <select name="bookId">
+                    <option th:each="b:${books}" th:value="${b.id}" th:text="${b.title + ' (còn ' + b.availableCopies + ')'}"></option>
+                </select>
+            </div>
+            <div>
+                <label>Hạn trả</label>
+                <input type="date" name="dueDate" th:value="${today}">
+            </div>
+            <div class="form-actions" style="margin-top: 28px;">
+                <button type="submit" class="btn btn-primary">Tạo phiếu mượn</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-wrap card" style="padding: 0;">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Thành viên</th>
+                <th>Sách</th>
+                <th>Ngày mượn</th>
+                <th>Hạn trả</th>
+                <th>Ngày trả</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r:${records}">
+                <td th:text="${r.id}"></td>
+                <td th:text="${r.member.fullName}"></td>
+                <td th:text="${r.book.title}"></td>
+                <td th:text="${r.borrowDate}"></td>
+                <td th:text="${r.dueDate}"></td>
+                <td th:text="${r.returnDate}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${r.status == 'BORROWED' ? 'badge-borrowing' : (r.status == 'OVERDUE' ? 'badge-overdue' : 'badge-returned')}"
+                          th:text="${r.status}"></span>
+                </td>
+                <td>
+                    <form class="inline" th:if="${r.returnDate == null}" th:action="@{'/borrow/return/' + ${r.id}}" method="post">
+                        <button type="submit" class="btn btn-success">Trả sách</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(records)}">
+                <td colspan="8" class="empty">Chưa có phiếu mượn nào.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

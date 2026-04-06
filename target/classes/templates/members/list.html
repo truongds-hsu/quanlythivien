@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý tài khoản</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${session.currentUser})}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Quản lý tài khoản</h1>
+            <p class="page-subtitle">Tạo mới, cập nhật và khóa hoặc mở khóa thành viên trong hệ thống.</p>
+        </div>
+        <a class="btn btn-primary" href="/members/new">Thêm tài khoản</a>
+    </div>
+
+    <div class="table-wrap card" style="padding: 0;">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Họ tên</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${members}">
+                <td th:text="${m.memberCode}"></td>
+                <td th:text="${m.fullName}"></td>
+                <td th:text="${m.username}"></td>
+                <td th:text="${m.phone}"></td>
+                <td th:text="${m.email}"></td>
+                <td><span class="badge" th:classappend="${m.role.name() == 'ADMIN' ? 'badge-admin' : 'badge-user'}" th:text="${m.role}"></span></td>
+                <td><span class="badge" th:classappend="${m.active ? 'badge-active' : 'badge-locked'}" th:text="${m.active ? 'Hoạt động' : 'Đã khóa'}"></span></td>
+                <td>
+                    <div class="actions">
+                        <a class="btn btn-secondary" th:href="@{'/members/edit/' + ${m.id}}">Sửa</a>
+                        <form class="inline" th:action="@{'/members/toggle-status/' + ${m.id}}" method="post">
+                            <button type="submit" th:text="${m.active ? 'Khóa' : 'Mở khóa'}"></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(members)}">
+                <td colspan="8" class="empty">Chưa có tài khoản nào.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

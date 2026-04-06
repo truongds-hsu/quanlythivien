@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thông tin sách</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${session.currentUser})}"></div>
+    <div class="card" style="max-width: 860px; margin: 0 auto;">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${book.id == null ? 'Thêm sách mới' : 'Cập nhật sách'}"></h1>
+                <p class="page-subtitle">Nhập đầy đủ thông tin để quản lý sách và tồn kho.</p>
+            </div>
+        </div>
+        <form id="bookForm" method="post" action="/books" th:object="${book}" class="form-grid cols-2">
+            <input type="hidden" th:field="*{id}">
+            <div>
+                <label>Mã sách</label>
+                <input id="bookCode" th:field="*{bookCode}" required>
+            </div>
+            <div>
+                <label>Tên sách</label>
+                <input id="title" th:field="*{title}" required>
+            </div>
+            <div>
+                <label>Tác giả</label>
+                <input id="author" th:field="*{author}" required>
+            </div>
+            <div>
+                <label>Nhà xuất bản</label>
+                <input id="publisher" th:field="*{publisher}">
+            </div>
+            <div>
+                <label>Thể loại</label>
+                <input id="category" th:field="*{category}">
+            </div>
+            <div>
+                <label>Tổng số lượng</label>
+                <input id="totalCopies" type="number" min="0" th:field="*{totalCopies}" required>
+            </div>
+            <div>
+                <label>Số lượng còn</label>
+                <input id="availableCopies" type="number" min="0" th:field="*{availableCopies}" required>
+            </div>
+            <div class="form-actions" style="grid-column: 1 / -1;">
+                <button id="submitBtn" type="submit" class="btn btn-primary">Lưu</button>
+                <a href="/books" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

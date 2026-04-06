@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="nav(currentUser)">
+    <div class="navbar">
+        <div class="navbar__links">
+            <a class="navbar__brand" href="/">📚 Library Management</a>
+            <a href="/books">Sách</a>
+            <a href="/borrow">Mượn / Trả</a>
+            <a href="/reservations">Đặt trước</a>
+            <a th:if="${currentUser != null and currentUser.role.name() == 'ADMIN'}" href="/members">Tài khoản</a>
+            <a th:if="${currentUser != null and currentUser.role.name() == 'ADMIN'}" href="/fines">Tiền phạt</a>
+            <a th:if="${currentUser != null and currentUser.role.name() == 'ADMIN'}" href="/reports">Báo cáo</a>
+        </div>
+        <div class="navbar__actions">
+            <span th:if="${currentUser != null}" th:text="${currentUser.fullName + ' (' + currentUser.role + ')'}"></span>
+            <a th:if="${currentUser != null}" class="btn btn-danger" href="/logout">Đăng xuất</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

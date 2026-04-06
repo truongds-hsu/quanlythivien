@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page">
+    <div th:replace="~{fragments/nav :: nav(${currentUser})}"></div>
+
+    <section class="hero">
+        <div class="page-header" style="margin-bottom: 0;">
+            <div>
+                <h1 class="page-title">Hệ thống quản lý thư viện</h1>
+                <p class="page-subtitle">Theo dõi sách, thành viên, phiếu mượn, đặt trước và nhắc hạn trả trên một giao diện thống nhất.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat">
+            <div class="stat__label">Tổng số sách</div>
+            <div class="stat__value" th:text="${bookCount}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat__label">Thành viên</div>
+            <div class="stat__value" th:text="${memberCount}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat__label">Đang mượn</div>
+            <div class="stat__value" th:text="${borrowingCount}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat__label">Đặt trước</div>
+            <div class="stat__value" th:text="${reservationCount}">0</div>
+        </div>
+    </section>
+
+    <div class="grid grid-2" style="margin-bottom: 18px;">
+        <div class="card">
+            <h2 style="margin-top: 0;">🔔 Nhắc hạn trả sách</h2>
+            <div th:if="${#lists.isEmpty(reminders)}" class="empty">Hiện không có phiếu mượn nào sắp đến hạn hoặc quá hạn.</div>
+            <div th:each="reminder : ${reminders}" class="alert alert-warning">
+                <span th:text="${reminder}"></span>
+            </div>
+        </div>
+        <div class="card">
+            <h2 style="margin-top: 0;">⚡ Truy cập nhanh</h2>
+            <div class="actions">
+                <a class="btn btn-primary" href="/books">Quản lý sách</a>
+                <a class="btn btn-primary" href="/borrow">Mượn / Trả</a>
+                <a class="btn btn-primary" href="/reservations">Đặt trước</a>
+                <a class="btn btn-primary" th:if="${currentUser.role.name() == 'ADMIN'}" href="/members">Tài khoản</a>
+                <a class="btn btn-primary" th:if="${currentUser.role.name() == 'ADMIN'}" href="/fines">Tiền phạt</a>
+                <a class="btn btn-secondary" th:if="${currentUser.role.name() == 'ADMIN'}" href="/reports">Xem báo cáo</a>
+                <a class="btn btn-secondary" th:if="${currentUser.role.name() == 'ADMIN'}" href="/h2-console">H2 Console</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
